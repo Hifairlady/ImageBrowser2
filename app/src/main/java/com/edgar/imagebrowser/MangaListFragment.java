@@ -2,10 +2,19 @@ package com.edgar.imagebrowser;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 
 /**
@@ -22,6 +31,14 @@ public class MangaListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private MangaListAdapter adapter;
+    private ArrayList<MangaListItem> listItems;
+
+    private Handler mHandler;
+
 
 
     public MangaListFragment() {
@@ -62,4 +79,62 @@ public class MangaListFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_manga_list, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.rv_main);
+        swipeRefreshLayout = view.findViewById(R.id.srl_main);
+
+        adapter = new MangaListAdapter(getContext(), listItems);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setColorSchemeColors(0xFF000000);
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 1:
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        };
+
+        GetMangasThread mThread = new GetMangasThread(mHandler);
+        mThread.run();
+
+    }
+
+    private class GetMangasThread extends Thread {
+
+        private Handler handler;
+
+        public GetMangasThread(Handler handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+
+            for (int i = 0; i < 10; i++) {
+                Message message = Message.obtain();
+                message.what = i;
+                handler.sendMessage(message);
+            }
+
+        }
+    }
 }

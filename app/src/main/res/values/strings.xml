@@ -3,7 +3,4 @@
     <string name="manga_item_title_text">Title here</string>
     <string name="manga_item_page_num">%d Pages</string>
     <string name="menu_item_help_title">Help</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
